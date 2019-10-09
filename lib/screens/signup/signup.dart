@@ -127,7 +127,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         onChanged: (_countryCode) {
                           //countryCode = _countryCode;
                         },
-                        initialSelection: 'IL',
+                        initialSelection: 'TH',
                         favorite: [],
                         showCountryOnly: false,
                         textStyle: const TextStyle(fontSize: 18),
@@ -179,11 +179,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: TransparentButton(
                       label: "Skip",
                       onPressed: () {
-                        viewModel.signUp(
-                            context,
-                            "",
-                            "",
-                            "");
+                        viewModel.signUp(context, "", "", "");
                       }),
                 ),
                 const SizedBox(height: 16.0),
@@ -193,11 +189,12 @@ class _SignUpPageState extends State<SignUpPage> {
                       "This data will be enrypted and stored only on this device secured storage.",
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                      color: Colors.black.withOpacity(0.5),
-                      fontSize: 14,
-                      fontWeight: FontWeight.normal),),
+                          color: Colors.black.withOpacity(0.5),
+                          fontSize: 14,
+                          fontWeight: FontWeight.normal),
+                    ),
                     padding: const EdgeInsets.only(bottom: 30.0),
-                  ) ,
+                  ),
                 )
               ],
             ),

@@ -13,23 +13,44 @@ class Transaction {
   final double amount;
   final bool pending;
 
-  Transaction({this.value, this.to, this.from, this.hash, this.timeStamp, this.tokenSymbol, this.date, this.amount, this.pending});
+  Transaction(
+      {this.value,
+      this.to,
+      this.from,
+      this.hash,
+      this.timeStamp,
+      this.tokenSymbol,
+      this.date,
+      this.amount,
+      this.pending});
 
   factory Transaction.fromJson(Map<String, dynamic> json) {
+    DateTime date = DateTime.parse(json['created_at']);
     return Transaction(
-      value: json['value'],
-      to: json['to'],
-      from: json['from'],
-      hash: json['hash'],
-      timeStamp: json['timeStamp'],
-      tokenSymbol: json['tokenSymbol'],
-      pending: false,
-      date: json['timeStamp'] != null ? new DateTime.fromMillisecondsSinceEpoch(int.tryParse(json['timeStamp']) * 1000) : null,
-      amount: json['value'] != null ? BigInt.tryParse(json['value']) / BigInt.from(1000000000000000000) : null
-    );
+        value: json['value'],
+        to: json['to_address'],
+        from: json['from_address'],
+        hash: json['hash'],
+        //timeStamp: json['timeStamp'],
+        tokenSymbol: 'XSEGA',
+        pending: false,
+        date: json['created_at'] != null ? date : null,
+        amount: json['value'] != null
+//            ? BigInt.tryParse(json['value']) / BigInt.from(100)
+            ? BigInt.tryParse(json['value']) / BigInt.from(1)
+            : null);
   }
 
-  dynamic toJson() => {'value': value,'to': to,'from': from, 'hash': hash,'timeStamp': timeStamp,'tokenSymbol': tokenSymbol,'date': date.millisecondsSinceEpoch.toString(),'amount': amount};
+  dynamic toJson() => {
+        'value': value,
+        'to': to,
+        'from': from,
+        'hash': hash,
+        'timeStamp': timeStamp,
+        'tokenSymbol': tokenSymbol,
+        'date': date.millisecondsSinceEpoch.toString(),
+        'amount': amount
+      };
 }
 
 class TransactionList {
@@ -39,20 +60,19 @@ class TransactionList {
   TransactionList({this.transactions, this.pendingTransactions});
 
   factory TransactionList.fromJson(Map<String, dynamic> json) {
-
-    var list = json['result'] as List;
-
+    if (json['internal_transactions'] == null) {
+      return null;
+    }
+    var list = json['internal_transactions'] as List;
     List<Transaction> transactions = new List<Transaction>();
-    transactions = list.map((i)=>Transaction.fromJson(i)).toList();
+    transactions = list.map((i) => Transaction.fromJson(i)).toList();
 
     return new TransactionList(
-      transactions: transactions,
-      pendingTransactions: new List<Transaction>()
-    );
+        transactions: transactions,
+        pendingTransactions: new List<Transaction>());
   }
 
   factory TransactionList.fromJsonState(Map<String, dynamic> json) {
-
     if (json == null) {
       return null;
     }
@@ -60,12 +80,11 @@ class TransactionList {
     var list = json['transactions'] as List;
 
     List<Transaction> transactions = new List<Transaction>();
-    transactions = list.map((i)=>Transaction.fromJson(i)).toList();
+    transactions = list.map((i) => Transaction.fromJson(i)).toList();
 
     return new TransactionList(
-      transactions: transactions,
-      pendingTransactions: new List<Transaction>()
-    );
+        transactions: transactions,
+        pendingTransactions: new List<Transaction>());
   }
 
   dynamic toJson() => {'transactions': transactions};

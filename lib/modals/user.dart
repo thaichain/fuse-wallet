@@ -8,7 +8,7 @@ class User {
   String phone;
   String privateKey;
   String publicKey;
-  List<String> mnemonic;
+  String mnemonic;
 
   User(
       {this.userId,
@@ -20,16 +20,19 @@ class User {
       this.publicKey,
       this.mnemonic});
 
-  static User fromJson(dynamic json) => json != null ? User(
-      userId: json["userId"],
-      firstName: json["firstName"],
-      lastName: json["lastName"],
-      email: json["email"],
-      phone: json["phone"],
-      privateKey: json["privateKey"],
-      publicKey: json["publicKey"],
-      //mnemonic: (jsonDecode(json["mnemonic"]) as List<dynamic>).cast<String>(),
-      ) : null;
+  static User fromJson(dynamic json) => json != null
+      ? User(
+          userId: json["userId"],
+          firstName: json["firstName"],
+          lastName: json["lastName"],
+          email: json["email"],
+          phone: json["phone"],
+          privateKey: json["privateKey"],
+          publicKey: json["publicKey"],
+          mnemonic: json["mnemonic"],
+          //mnemonic: (jsonDecode(json["mnemonic"]) as List<dynamic>).cast<String>(),
+        )
+      : null;
 
   dynamic toJson() => {
         'userId': userId,

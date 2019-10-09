@@ -11,16 +11,16 @@ import 'package:fusewallet/logic/common.dart';
 import 'package:fusewallet/screens/wallet/wallet.dart';
 import 'package:fusewallet/widgets/widgets.dart';
 
-class Backup1Page extends StatefulWidget {
-  Backup1Page({Key key, this.title}) : super(key: key);
+class ShowKeyPage extends StatefulWidget {
+  ShowKeyPage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _Backup1PageState createState() => _Backup1PageState();
+  _ShowKeyPageState createState() => _ShowKeyPageState();
 }
 
-class _Backup1PageState extends State<Backup1Page> {
+class _ShowKeyPageState extends State<ShowKeyPage> {
   static GlobalKey<ScaffoldState> scaffoldState;
 
   @override
@@ -48,12 +48,12 @@ class _Backup1PageState extends State<Backup1Page> {
         ),
       ),
       new StoreConnector<AppState, SignInViewModel>(onInit: (store) {
-        store.dispatch(generateWalletCall());
+        //store.dispatch(generateWalletCall());
       }, converter: (store) {
         return SignInViewModel.fromStore(store);
       }, builder: (_, viewModel) {
         return (viewModel.user != null &&
-                //viewModel.user.mnemonic.length > 0 &&
+                viewModel.user.mnemonic.length > 0 &&
                 !viewModel.isLoading)
             ? Column(
                 children: <Widget>[
@@ -123,18 +123,12 @@ class _Backup1PageState extends State<Backup1Page> {
                   const SizedBox(height: 30.0),
                   Center(
                       child: PrimaryButton(
-                    label: "NEXT",
+                    label: "BACK",
                     onPressed: () async {
-                      openPage(context, new Backup2Page());
+                      Navigator.pop(context);
                     },
                   )),
                   const SizedBox(height: 16.0),
-                  TransparentButton(
-                      label: "Skip",
-                      onPressed: () {
-                        viewModel.openWallet(context);
-                      }),
-                  const SizedBox(height: 30.0),
                 ],
               )
             : Padding(

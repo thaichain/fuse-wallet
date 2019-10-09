@@ -13,20 +13,20 @@ import 'package:redux_thunk/redux_thunk.dart';
 
 ThunkAction loadUserState(BuildContext context) {
   return (Store store) async {
-
-    var _isLogged = store.state.userState.user != null && store.state.userState.user.firstName != null;
+    print(store.state.userState.user);
+    print(store.state.userState.user.mnumernic);
+    var _isLogged = store.state.userState.user != null &&
+        store.state.userState.user.firstName != null;
 
     store.dispatch(new LoadUserAction(_isLogged));
     if (_isLogged) {
       store.dispatch(openWalletCall(context));
     }
-
   };
 }
 
 ThunkAction sendCodeToPhoneNumberCall(BuildContext context, String phone) {
   return (Store store) async {
-
 /*
     phone = phone.trim();
     var _user = store.state.userState.user;
@@ -53,13 +53,11 @@ ThunkAction sendCodeToPhoneNumberCall(BuildContext context, String phone) {
     */
 
     openPage(context, new SignUpPage());
-
   };
 }
 
 ThunkAction signInWithPhoneNumberCall(BuildContext context, String smsCode) {
   return (Store store) async {
-
     /*
     store.dispatch(new StartLoadingAction());
 
@@ -86,9 +84,9 @@ ThunkAction signInWithPhoneNumberCall(BuildContext context, String smsCode) {
   };
 }
 
-ThunkAction signUpCall(BuildContext context, String firstName, String lastName, String email) {
+ThunkAction signUpCall(
+    BuildContext context, String firstName, String lastName, String email) {
   return (Store store) async {
-    
     var _user = store.state.userState.user;
     if (_user == null) {
       _user = new User();
@@ -105,10 +103,11 @@ ThunkAction signUpCall(BuildContext context, String firstName, String lastName, 
 }
 
 ThunkAction create3boxAccountCall() {
-    return (Store store) async {
-      final _webView = new InteractiveWebView();
-      print('Loading 3box webview for account ${store.state.userState.user.publicKey}');
-      final html = '''<html>
+  return (Store store) async {
+    final _webView = new InteractiveWebView();
+    print(
+        'Loading 3box webview for account ${store.state.userState.user.publicKey}');
+    final html = '''<html>
         <head></head>
         <script>
           window.pk = '0x${store.state.userState.user.privateKey}';
@@ -117,8 +116,8 @@ ThunkAction create3boxAccountCall() {
         <script src='https://3box.fusenet.io/main.js'></script>
         <body></body>
       </html>''';
-      _webView.loadHTML(html, baseUrl: "https://beta.3box.io");
-    };
+    _webView.loadHTML(html, baseUrl: "https://beta.3box.io");
+  };
 }
 
 ThunkAction generateWalletCall() {
@@ -126,11 +125,11 @@ ThunkAction generateWalletCall() {
     store.dispatch(new StartLoadingAction());
     var user = await generateWallet(store.state.userState.user);
     store.dispatch(new UpdateUserAction(user));
-    store.dispatch(create3boxAccountCall());
+    //store.dispatch(create3boxAccountCall());
   };
 }
 
-ThunkAction setProtectMethodCall(method, { code = ""}) {
+ThunkAction setProtectMethodCall(method, {code = ""}) {
   return (Store store) async {
     store.dispatch(new SetProtectMethodAction(method, code));
   };
@@ -139,13 +138,16 @@ ThunkAction setProtectMethodCall(method, { code = ""}) {
 ThunkAction openWalletCall(context) {
   return (Store store) async {
     var method = store.state.userState.protectMethod;
-    var lastEnter = store.state.userState.protectTimestamp == null ? DateTime.now().subtract(Duration(minutes: 30)) : store.state.userState.protectTimestamp;
+    var lastEnter = store.state.userState.protectTimestamp == null
+        ? DateTime.now().subtract(Duration(minutes: 30))
+        : store.state.userState.protectTimestamp;
     Duration difference = DateTime.now().difference(lastEnter);
     if (method == "pincode" && difference.inMinutes > 10) {
       openPage(context, new PincodePage());
     } else if (method == "fingerprint" && difference.inMinutes > 10) {
       var localAuth = LocalAuthentication();
-      bool didAuthenticate = await localAuth.authenticateWithBiometrics(localizedReason: 'Please authenticate to open the wallet');
+      bool didAuthenticate = await localAuth.authenticateWithBiometrics(
+          localizedReason: 'Please authenticate to open the wallet');
       if (didAuthenticate) {
         openPageReplace(context, new WalletPage());
       }

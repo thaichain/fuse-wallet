@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'dart:core';
 import 'package:fusewallet/logic/common.dart';
 //import 'package:flutter_nfc_reader/flutter_nfc_reader.dart';
-import 'package:fusewallet/screens/signup/backup1.dart';
+import 'package:fusewallet/screens/signup/showkey.dart';
 import 'package:fusewallet/screens/wallet/protect_wallet.dart';
 import 'package:fusewallet/screens/wallet/switch_community.dart';
 import 'package:fusewallet/screens/wallet/web2.dart';
@@ -31,7 +31,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
   @override
   void initState() {
     super.initState();
-
   }
 
   @override
@@ -42,31 +41,35 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           return SignInViewModel.fromStore(store);
         },
         builder: (_, viewModel) {
-          return viewModel.user != null ? Builder(
-              builder: (context) => ListView(
-                    padding: EdgeInsets.zero,
-                    children: <Widget>[
-                      DrawerHeader(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Padding(
-                              padding: EdgeInsets.only(top: 10, bottom: 15),
-                              child:
-                                  Image.asset('images/avatar.png', width: 70),
+          return viewModel.user != null
+              ? Builder(
+                  builder: (context) => ListView(
+                        padding: EdgeInsets.zero,
+                        children: <Widget>[
+                          DrawerHeader(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.only(top: 10, bottom: 15),
+                                  child: Image.asset('images/avatar.png',
+                                      width: 70),
+                                ),
+                                Text(
+                                  viewModel.user.firstName +
+                                      " " +
+                                      viewModel.user.lastName,
+                                  style: TextStyle(
+                                      color: const Color(0xFF787878),
+                                      fontSize: 16),
+                                )
+                              ],
                             ),
-                            Text(
-                              viewModel.user.firstName + " " + viewModel.user.lastName,
-                              style: TextStyle(
-                                  color: const Color(0xFF787878), fontSize: 16),
-                            )
-                          ],
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                        ),
-                      ),
-                      /*
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).primaryColor,
+                            ),
+                          ),
+                          /*
           ListTile(
             title: Text('Delete Account'),
             onTap: () {
@@ -124,37 +127,41 @@ class _DrawerWidgetState extends State<DrawerWidget> {
             },
           ),
           */
-                      ListTile(
-                        title: Text(
-                          'Switch community',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          openPage(context, SwitchCommunityPage());
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        title: Text(
-                          'Protect your wallet',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          openPage(context, ProtectWalletPage());
-                        },
-                      ),
-                      Divider(),
-                      ListTile(
-                        title: Text(
-                          'Back up wallet',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          openPage(context, Backup1Page());
-                        },
-                      ),
-                      Divider(),
-                      /*
+                          ListTile(
+                            title: Text(
+                              'Switch community',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              openPage(context, SwitchCommunityPage());
+                            },
+                          ),
+                          Divider(),
+                          ListTile(
+                            title: Text(
+                              'Protect your wallet',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              openPage(context, ProtectWalletPage());
+                            },
+                          ),
+                          Divider(),
+                          ListTile(
+                            title: Text(
+                              'Back up wallet',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ShowKeyPage()),
+                              );
+                            },
+                          ),
+                          Divider(),
+                          /*
           ListTile(
             title: Text('Start NFC'),
             onTap: () {
@@ -169,7 +176,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           */
 
-                      /*
+                          /*
           ListTile(
             title: Text('Enter fingerprint'),
             onTap: () async {
@@ -181,32 +188,32 @@ class _DrawerWidgetState extends State<DrawerWidget> {
           ),
           */
 
-                      
-                      ListTile(
-                        title: Text(
-                          'Fuse studio',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onTap: () {
-                          openPage(context, WebViewExample());
-                        },
-                      ),
-                      Divider(),
-                      new LanguageSelector(),
-                      Divider(),
-                      ListTile(
-                        title: Text(
-                          'Log out',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        onTap: () async {
-                          Navigator.of(context).pop();
-                          viewModel.logout();
-                          openPageReplace(context, SplashScreen());
-                        },
-                      ),
-                    ],
-                  )) : Container();
+                          ListTile(
+                            title: Text(
+                              'Fuse studio',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onTap: () {
+                              openPage(context, WebViewExample());
+                            },
+                          ),
+                          Divider(),
+                          new LanguageSelector(),
+                          Divider(),
+                          ListTile(
+                            title: Text(
+                              'Log out',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                            onTap: () async {
+                              Navigator.of(context).pop();
+                              viewModel.logout();
+                              openPageReplace(context, SplashScreen());
+                            },
+                          ),
+                        ],
+                      ))
+              : Container();
         },
       ),
     );

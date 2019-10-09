@@ -4,6 +4,9 @@ import 'package:flutter/services.dart';
 import 'package:fusewallet/logic/common.dart';
 import 'package:fusewallet/screens/wallet/wallet.dart';
 import 'package:fusewallet/widgets/widgets.dart';
+import 'package:fusewallet/screens/signup/signup.dart';
+import 'package:fusewallet/screens/signup/signin.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class RecoveryPage extends StatefulWidget {
   RecoveryPage({Key key, this.title}) : super(key: key);
@@ -27,67 +30,71 @@ class _RecoveryPageState extends State<RecoveryPage> {
 
   @override
   Widget build(BuildContext context) {
-    return 
-    CustomScaffold(
-      title:"Recover your wallet",
-    children: <Widget>[
-      
-          Container(
-            //color: Theme.of(context).primaryColor,
-            padding: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0, top: 0.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(top: 0),
-                  child: Text(
-                      "This is a 12 word phrase you were given when you created your previous wallet",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Theme.of(context).primaryColor,
-                          fontSize: 18,
-                          fontWeight: FontWeight.normal)),
-                )
-              ],
-            ),
+    return CustomScaffold(title: "Recover your wallet", children: <Widget>[
+      Container(
+        //color: Theme.of(context).primaryColor,
+        padding:
+            EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0, top: 0.0),
+        child: Column(
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 0),
+              child: Text(
+                  "This is a 12 word phrase you were given when you created your previous wallet",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontSize: 18,
+                      fontWeight: FontWeight.normal)),
+            )
+          ],
+        ),
+      ),
+      Padding(
+        padding: EdgeInsets.only(top: 10, left: 30, right: 30),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                controller: wordsController,
+                keyboardType: TextInputType.multiline,
+                maxLines: 10,
+                autofocus: false,
+                decoration: const InputDecoration(
+                  labelText: 'Write down your 12 words...',
+                ),
+                validator: (String value) {
+                  if (value.split(" ").length != 12) {
+                    return 'Please enter 12 words';
+                  }
+                },
+              )
+            ],
           ),
-          Padding(
-            padding: EdgeInsets.only(top: 10, left: 30, right: 30),
-            child: Form(
-              key: _formKey,
-              child: Column(
-              children: <Widget>[
-                TextFormField(
-                  controller: wordsController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: 10,
-                  autofocus: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Write down your 12 words...',
-                  ),
-                  validator: (String value) {
-                    if (value.split(" ").length != 12) {
-                      return 'Please enter 12 words';
-                    }
-                  },
-                )
-              ],
-            ),
-            ),
-          ),
-          const SizedBox(height: 16.0),
-          Center(
-              child: PrimaryButton(
-            label: "NEXT",
-            onPressed: () async {
-              if (_formKey.currentState.validate()) {
-                //await WalletLogic.setMnemonic(wordsController.text);
-                openPageReplace(context, WalletPage());
-              }
-            },
-          )),
-        
+        ),
+      ),
+      const SizedBox(height: 16.0),
+      Center(
+          child: PrimaryButton(
+        label: "NEXT",
+        onPressed: () async {
+          if (_formKey.currentState.validate()) {
+            //await WalletLogic.setMnemonic(wordsController.text);
+            //openPageReplace(context, WalletPage());
+            print(wordsController.text);
+            final storage = new FlutterSecureStorage();
+            await storage.write(key: 'mnemonic', value: wordsController.text);
+            //openPage(context, new SignInPage());
+            //store.dispatch(generateWalletCall());
+            //openPageReplace(context, WalletPage());
+            //openPageReplace(context, SignUpPage());
+
+            openPage(context, new SignUpPage());
+            //openPage(context, new SignInPage());
+          }
+        },
+      )),
     ]);
-
   }
-
 }
