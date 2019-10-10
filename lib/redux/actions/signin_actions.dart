@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:core';
+
 import 'package:flutter/widgets.dart';
 import 'package:interactive_webview/interactive_webview.dart';
 import 'package:fusewallet/logic/common.dart';
@@ -10,17 +13,43 @@ import 'package:fusewallet/services/wallet_service.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:redux/redux.dart';
 import 'package:redux_thunk/redux_thunk.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'dart:convert';
 
 ThunkAction loadUserState(BuildContext context) {
   return (Store store) async {
-    print(store.state.userState.user);
-    print(store.state.userState.user.mnumernic);
+    //print(store.state.userState.user.toJson());
+    final storage = new FlutterSecureStorage();
+    String mnemonic = await storage.read(key: 'mnemonic');
+    String xuser = await storage.read(key: 'user');
+    //await storage.delete(key: 'mnemonic');
+    print("************* Signin Load User **********");
+
+    print(mnemonic);
+    // print(store.state.userState.user.mnumernic);
     var _isLogged = store.state.userState.user != null &&
         store.state.userState.user.firstName != null;
 
     store.dispatch(new LoadUserAction(_isLogged));
     if (_isLogged) {
       store.dispatch(openWalletCall(context));
+    } else {
+      if (xuser != null) {
+        //generateWalletCall();
+        //store.dispatch(openWalletCall(context));
+        print(xuser);
+        var _user = new User();
+        var json = jsonDecode(xuser);
+        _user.firstName = json['firstName'];
+        _user.lastName = json['lastName'];
+        _user.email = json['email'];
+        _user.phone = json['phone'];
+        var user = await generateWallet(_user);
+        store.dispatch(new UpdateUserAction(user));
+        //viewModel.openWallet(context);
+        store.dispatch(openWalletCall(context));
+        //openPage(context, new Backup1Page());
+      }
     }
   };
 }
@@ -96,7 +125,10 @@ ThunkAction signUpCall(
     _user.email = email;
     _user.phone = "";
     store.dispatch(new UpdateUserAction(_user));
-
+    print("***** Update User *****");
+    final storage = new FlutterSecureStorage();
+    await storage.write(key: 'user', value: jsonEncode(_user.toJson()));
+    print(_user.toJson());
     openPage(context, new Backup1Page());
     return true;
   };
@@ -188,7 +220,6 @@ class LoginCodeSentSuccessAction {
 
 class UpdateUserAction {
   final User user;
-
   UpdateUserAction(this.user);
 }
 

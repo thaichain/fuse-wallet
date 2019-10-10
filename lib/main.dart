@@ -14,10 +14,12 @@ import 'package:flutter/foundation.dart';
 import 'package:fusewallet/generated/i18n.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'redux/state/state_secure_storage.dart';
+import 'redux/actions/signin_actions.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var storage = new FlutterSecureStorage();
+  String xuser = await storage.read(key: 'user');
   final persistor = Persistor<AppState>(
     //storage: FlutterStorage(key: "app6"),
     storage: SecureStorage(storage = storage),
@@ -35,6 +37,7 @@ void main() async {
   final store = Store<AppState>(appReducer,
       initialState: initialState ?? new AppState.initial(),
       middleware: [thunkMiddleware, persistor.createMiddleware()]);
+  //store.state.userState.isUserLogged = true;
 
   runApp(new MyApp(
     store: store,
@@ -81,7 +84,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     //I18n.onLocaleChanged = onLocaleChange;
-
+    //store.dispatch(loadUserState(context));
+    print(store.state.userState.isUserLogged);
     return new Column(
       children: <Widget>[
         new Expanded(

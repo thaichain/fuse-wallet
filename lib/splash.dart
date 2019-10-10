@@ -13,6 +13,7 @@ import 'redux/state/app_state.dart';
 //import 'package:beacon_broadcast/beacon_broadcast.dart';
 
 class SplashScreen extends StatefulWidget {
+  //final bool isUserLogged = false;
   @override
   _SplashScreenState createState() => _SplashScreenState();
 }
@@ -34,8 +35,6 @@ class _SplashScreenState extends State<SplashScreen> {
   ];
   logon() async {
     //WalletLogic.init();
-
-
 
 /*
     WalletLogic.isLogged().then((isLogged) {
@@ -114,7 +113,6 @@ class _SplashScreenState extends State<SplashScreen> {
       // list can be empty if no matching beacons were found in range
     });
     */
-    
   }
 
   @override
@@ -142,7 +140,6 @@ class _SplashScreenState extends State<SplashScreen> {
           Timer.run(() {
             store.dispatch(loadUserState(context));
           });
-          
         }, builder: (BuildContext context, Store<AppState> store) {
           return Container(
               child: Column(

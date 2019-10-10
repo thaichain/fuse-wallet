@@ -60,7 +60,7 @@ Future loadCommunity(Store store, tokenAddress, env, originNetwork) async {
   store.dispatch(new CommunityLoadedAction(tokenAddress, commmunity));
 
   loadBalances(store);
-  new Timer.periodic(Duration(seconds: 3), (timer) {
+  new Timer.periodic(Duration(seconds: 30), (timer) {
     try {
       loadBalances(store);
     } catch (e) {}
@@ -86,8 +86,10 @@ Future loadBalance(Store store) async {
   var publicKey = store.state.userState.user?.publicKey;
   var tokenAddress = store.state.walletState.tokenAddress;
   print(store.state.userState.user?.publicKey);
-  print(store.state.userState.user.mnemonic);
+  print(store.state.userState.user?.mnemonic);
   print("*************Balance************");
+  print(store.state.userState.user?.toJson());
+  print("*************User************");
   if (publicKey != "" && tokenAddress != "") {
     try {
       var balance = await getBalance(publicKey, tokenAddress);
