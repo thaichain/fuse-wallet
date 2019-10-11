@@ -37,7 +37,6 @@ void main() async {
   final store = Store<AppState>(appReducer,
       initialState: initialState ?? new AppState.initial(),
       middleware: [thunkMiddleware, persistor.createMiddleware()]);
-  //store.state.userState.isUserLogged = true;
 
   runApp(new MyApp(
     store: store,
